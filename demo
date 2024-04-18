@@ -1,0 +1,50 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int main()
+{
+    ios::sync_with_stdio(0);cin.tie(0);
+    int n;
+    cin>>n;
+    unordered_map<string,int> target_words;
+    for (int i=0;i<n;i++){
+        string word;
+        cin>>word;
+        target_words[word]=0;
+    }
+    int m;
+    cin>>m;
+    vector<string> article(m);
+    for (int i=0;i<m;i++){
+        cin>>article[i];
+        if (target_words.find(article[i])!=target_words.end()&&target_words[article[i]]==0){
+            target_words[article[i]]++;
+        }
+    }
+    int max_count=0;
+    for (const auto& pair:target_words){
+        max_count+=pair.second;
+    }
+    int min_length=m;
+    unordered_map<string,int> window;
+    int left=0,count_=0;
+    for (int right=0;right<m;right++){
+        if (target_words.find(article[right])!=target_words.end()){
+            window[article[right]]++;
+            if (window[article[right]]==1){
+                count_++;
+            }
+        }
+        while (count_==n){
+            min_length=min(min_length,right-left+1);
+            if (target_words.find(article[left])!=target_words.end()){
+                window[article[left]]--;
+                if (window[article[left]]==0){
+                    count_--;
+                }
+            }
+            left++;
+        }
+    }
+    cout<<max_count<<endl;
+    cout<<min_length<<endl;
